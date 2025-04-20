@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Compressor - Optimize Your Images Online</title>
+  <meta name="description" content="Compress and optimize images online. Choose your compression level and reduce file size without losing quality. Free and fast image compressor." />
+  <meta name="keywords" content="image compressor, online image optimization, reduce image size, compress JPG, compress PNG" />
+  <meta name="author" content="Your Brand Name" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #e0eafc, #cfdef3);
+      color: #333;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: white;
+      padding: 3rem 1rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      font-size: 2.8rem;
+      margin-bottom: 0.5rem;
+    }
+    header p {
+      font-size: 1.2rem;
+      color: #f3f3f3;
+    }
+    .ads {
+      text-align: center;
+      margin: 30px 0;
+    }
+    .compressor {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem;
+      max-width: 700px;
+      margin: auto;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+    .compressor input[type="file"] {
+      margin-bottom: 1.5rem;
+      padding: 0.5rem;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+    }
+    .compressor label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .compressor input[type="range"] {
+      width: 100%;
+    }
+    .output {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .btn {
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .btn:hover {
+      background: linear-gradient(to right, #5a67d8, #6b46c1);
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+      color: #555;
+    }
+    @media (max-width: 600px) {
+      .compressor { padding: 1.5rem; }
+      header h1 { font-size: 2.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Online Image Compressor</h1>
+    <p>Select your compression level and optimize images instantly</p>
+  </header>
+
+  <div class="ads">
+    <!-- Google AdSense Ad Slot -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca--6297798938697090
+         data-ad-slot="your-ad-slot-id"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <div class="compressor">
+    <label for="imageInput">Choose Image:</label>
+    <input type="file" id="imageInput" accept="image/*">
+
+    <label for="qualityRange">Compression Level (Low to High Quality):</label>
+    <input type="range" id="qualityRange" min="10" max="100" value="80">
+    <p>Selected Quality: <span id="qualityValue">80</span>%</p>
+
+    <button class="btn" onclick="compressImage()">Compress Image</button>
+
+    <div class="output" id="outputContainer"></div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Your Brand Name. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const qualityRange = document.getElementById('qualityRange');
+    const qualityValue = document.getElementById('qualityValue');
+
+    qualityRange.addEventListener('input', () => {
+      qualityValue.textContent = qualityRange.value;
+    });
+
+    function compressImage() {
+      const fileInput = document.getElementById('imageInput');
+      const outputContainer = document.getElementById('outputContainer');
+      const quality = qualityRange.value / 100;
+
+      if (fileInput.files.length === 0) {
+        alert('Please select an image.');
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function(event) {
+        const img = new Image();
+        img.src = event.target.result;
+
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+
+          canvas.width = img.width;
+          canvas.height = img.height;
+
+          ctx.drawImage(img, 0, 0);
+
+          canvas.toBlob(function(blob) {
+            const newImg = document.createElement('img');
+            const downloadLink = document.createElement('a');
+
+            newImg.src = URL.createObjectURL(blob);
+            newImg.style.maxWidth = '100%';
+            newImg.style.marginTop = '1rem';
+            newImg.style.borderRadius = '12px';
+            newImg.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
+
+            downloadLink.href = newImg.src;
+            downloadLink.download = 'compressed-image.jpg';
+            downloadLink.textContent = 'Download Compressed Image';
+            downloadLink.className = 'btn';
+            downloadLink.style.display = 'inline-block';
+            downloadLink.style.marginTop = '1.5rem';
+
+            outputContainer.innerHTML = '';
+            outputContainer.appendChild(newImg);
+            outputContainer.appendChild(downloadLink);
+          }, 'image/jpeg', quality);
+        }
+      }
+      reader.readAsDataURL(file);
+    }
+  </script>
+</body>
+</html>
